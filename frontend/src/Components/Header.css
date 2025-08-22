@@ -1,6 +1,6 @@
 /* Header.css */
 .header{
-    position: fixed;
+    position: absolute;
     left: 0%;
     top: 0%;
     width: 100%;
@@ -12,6 +12,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    font-size: medium;
 }
 .sign{
     display: flex;
@@ -19,6 +20,7 @@
     gap: 5px;
     justify-content: normal;
     align-items: center;
+    user-select: none;
 }
 .sign-item{
     display: flex;
@@ -27,12 +29,25 @@
     text-decoration: none;
     color: whitesmoke;
 }
-.menuIcon:hover{
-    color: #5159ED;
+.sign-item:hover {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: underline;
+    color: #BBE;
+    cursor: pointer;
+}
+.menuIcon:hover {
+    color: #BBE;
+    cursor: pointer;
 }
 .title{
     font-size: large;
     user-select: none;
+    position: absolute;
+    left: 40%;
+    width: 20%;
+    cursor: pointer;
 }
 
 /* http://developers.google.com/codelabs/maps-platform/maps-platform-101-react-js?hl=pt-br#0

@@ -1,29 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './PageStyles.css';
+import './CreateStyles.css';
 
-function Tela1() {
+function CreatePage() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [passwordRepeat, setPasswordRepeat] = useState('');
 
   function goToHome() {
     navigate('/');
   }
 
-  function goToTela2() {
-    navigate('/tela2');
-  }
-
-  function goToTela3() {
-    navigate('/tela3');
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+
+    if(password!=passwordRepeat){
+      setError('As senhas não coincidem!');
+      return;
+    }
 
     try {
     //   const response = await axios.post('http://localhost:3001/users/login', { email, password });
@@ -36,24 +34,21 @@ function Tela1() {
   }
 
   return (
-    <div className="page">
-        <button className="page-button" onClick={goToHome}>Home</button>
-        <button className="page-button" onClick={goToTela2}>Tela2</button>
-        <button className="page-button" onClick={goToTela3}>Tela3</button>
+    <div className="content-create">
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="create-form" onSubmit={handleSubmit}>
             <h2>Entrar</h2>
             <input
             type="text"
             placeholder="Nome"
-            className="input-field"
+            className="create-input-field"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             />
             <input
             type="email"
-            className="input-field"
+            className="create-input-field"
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -61,13 +56,22 @@ function Tela1() {
             />
             <input
             type="password"
-            className="input-field"
+            className="create-input-field"
             placeholder="Senha"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
             />
-            <button type="submit" className="login-button">Entrar</button>
+            <input
+            type="password"
+            className="create-input-field"
+            placeholder="Repita a senha"
+            value={passwordRepeat}
+            onChange={e => setPasswordRepeat(e.target.value)}
+            required
+            />
+            <button type="submit" className="create-button" style={{ display: "block", marginBottom: "10px" }}>Entrar</button>
+            <button className="create-button" onClick={goToHome} style={{ display: "block", marginBottom: "10px" }}>Home</button>        
             {error && <div style={{ color: "red", marginTop: 8 }}>{error}</div>}
         </form>
 
@@ -75,4 +79,4 @@ function Tela1() {
   );
 }
 
-export default Tela1;
+export default CreatePage;

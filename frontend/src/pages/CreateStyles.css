@@ -1,13 +1,23 @@
-.login-form {
+.content-create{
+    position: absolute;
+    width: 100%;
+    top: 12%;
+    left: 0%;
+    height: 100%;
+    background-color: #f9f9f9;
+}
+.create-form {
+    position: absolute;
+    top: 5%;
+    left: 35%;
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    width: 30%;
     box-sizing: border-box;
 }
-.input-field {
+.create-input-field {
     width: 100%;
     padding: 14px;
     margin: 14px 0;
@@ -16,7 +26,7 @@
     font-size: 1rem;
     box-sizing: border-box;
 }
-.login-button {
+.create-button {
     width: 100%;
     padding: 14px;
     background-color: #4482FF;
@@ -27,4 +37,7 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
+}
+.create-button:hover {
+    background-color: #233d68;
 }
