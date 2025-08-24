@@ -17,11 +17,11 @@ function App() {
   
   return (
     <div>
-      <Header className="header" toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} isLogged={isLogged} />
+      <Header className="header" toggleSidebar={toggleSidebar} isLogged={isLogged} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} isLogged={isLogged} toggleLogged={toggleLogged} />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage toggleLogged={toggleLogged} />} />
         <Route path="/create" element={<CreatePage />} />
       </Routes>
     </div>

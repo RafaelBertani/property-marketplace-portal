@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './Header.css'; // opcional, para estilos personalizados
 
-const Header = ({ toggleSidebar }) => {
+const Header = ({ toggleSidebar, isLogged }) => {
     
     const navigate = useNavigate();
     function goToCreate() {
@@ -13,7 +13,7 @@ const Header = ({ toggleSidebar }) => {
         navigate('/login');
     }
     function goToHomePage() {
-          navigate('/');
+        navigate('/');
     }
 
     return (
@@ -28,16 +28,24 @@ const Header = ({ toggleSidebar }) => {
             </div>
 
             {/* Sign in | Sign up */}
-            <div className='sign'>
-                <a className="sign-item" onClick={goToLogin}>
-                    <div>Login</div>
-                    <i className="fas fa-sign-in-alt"></i>
-                </a>
-                <a className="sign-item" onClick={goToCreate}>
-                    <div>Criar conta</div>
-                    <i className="fas fa-user-plus"></i>
-                </a>
-            </div>
+            {isLogged ?
+                (<>
+                    
+                </>)
+                :
+                (<>
+                    <div className='sign'>
+                        <a className="sign-item" onClick={goToLogin}>
+                            <div>Login</div>
+                            <i className="fas fa-sign-in-alt"></i>
+                        </a>
+                        <a className="sign-item" onClick={goToCreate}>
+                            <div>Criar conta</div>
+                            <i className="fas fa-user-plus"></i>
+                        </a>
+                    </div>
+                </>)
+            }
         </header>
     );
 };

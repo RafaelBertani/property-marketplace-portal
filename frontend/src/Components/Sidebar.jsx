@@ -3,9 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './Sidebar.css';
 
-const Sidebar = ({ isOpen, toggleSidebar, isLogged }) => {
+const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
   
   const navigate = useNavigate();
+  function goToLeave() {
+    navigate('/create');
+    toggleSidebar();
+    toggleLogged();
+    localStorage.removeItem('user');
+    localStorage.removeItem('email');
+  }
+  function goToHistory() {
+    navigate('/create');
+    toggleSidebar();
+  }
+  function goToFavorites() {
+    navigate('/create');
+    toggleSidebar();
+  }
+  function goToProfile() {
+    navigate('/create');
+    toggleSidebar();
+  }
   function goToCreate() {
     navigate('/create');
     toggleSidebar();
@@ -28,10 +47,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged }) => {
             <li className="sidebar-item"><a onClick={goToHomePage}>Home</a></li>
             {isLogged ? (
               <>
-                <li className="sidebar-item"><a href="/profile">My profile</a></li>
-                <li className="sidebar-item"><a href="/favorites">My favorites</a></li>
-                <li className="sidebar-item"><a href="/history">My history</a></li>
-                <li className="sidebar-item"><a href="/leave">Leave</a></li>
+                <li className="sidebar-item"><a onClick={goToProfile}>My profile</a></li>
+                <li className="sidebar-item"><a onClick={goToFavorites}>My favorites</a></li>
+                <li className="sidebar-item"><a onClick={goToHistory}>My history</a></li>
+                <li className="sidebar-item"><a onClick={goToLeave}>Leave</a></li>
               </>
             ) : (
               <>

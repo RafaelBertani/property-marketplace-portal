@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginStyles.css';
+import axios from 'axios';
 
-function LoginPage() {
+function LoginPage( {toggleLogged} ) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,10 +34,15 @@ function LoginPage() {
     setError('');
 
     try {
-    //   const response = await axios.post('http://localhost:3001/users/login', { email, password });
-    //   localStorage.setItem('user', response.data.name);
-    //   localStorage.setItem('email', response.data.email);
-    //   navigate('/home');
+      const response = await axios.post('http://localhost:3001/users/login', { email, password });
+      // const response = await axios.post('http://localhost:3001/users/login', { email, password });
+      // localStorage.setItem('user', response.data.name);
+      // localStorage.setItem('email', response.data.email);
+      localStorage.setItem('user', response.data.name);
+      localStorage.setItem('email', response.data.email);
+      if(response.status === 200){toggleLogged();}
+
+      goToHome(); //navigate('/home');
     } catch (err) {
       setError('Email ou senha inválidos.');
     }

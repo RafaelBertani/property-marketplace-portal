@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateStyles.css';
+import axios from 'axios';
 
 function CreatePage() {
   const navigate = useNavigate();
@@ -24,10 +25,9 @@ function CreatePage() {
     }
 
     try {
-    //   const response = await axios.post('http://localhost:3001/users/login', { email, password });
-    //   localStorage.setItem('user', response.data.name);
-    //   localStorage.setItem('email', response.data.email);
-    //   navigate('/home');
+      const response = await axios.post('http://localhost:3001/users/create', { email, name, password });
+      
+      goToHome(); //navigate('/home');
     } catch (err) {
       setError('Email ou senha inválidos.');
     }
@@ -37,7 +37,7 @@ function CreatePage() {
     <div className="content-create">
 
         <form className="create-form" onSubmit={handleSubmit}>
-            <h2>Entrar</h2>
+            <h2>Criar usuário</h2>
             <input
             type="text"
             placeholder="Nome"

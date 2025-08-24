@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: property_marketplace_portal
+    restart: always
+    ports:
+      - "9876:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "db#1post"
+      POSTGRES_DB: "pmp"
+      JWT_SECRET_KEY: "ifthispasswordwentonlineifailed"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  userservice:
+    build: ./backend/userservice
+    container_name: user_service
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      JWT_SECRET_KEY: "ifthispasswordwentonlineifailed"
+    depends_on:
+      - postgres
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+
+# docker-compose up -d
+
+# docker-compose down
+# docker-compose up -d
+
+# docker exec -it meu_postgres psql -U meu_usuario -d minha_base
+# docker exec -it teste_postgre_docker psql -U postgres -d testejs
