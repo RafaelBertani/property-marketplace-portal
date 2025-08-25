@@ -35,11 +35,11 @@ function LoginPage( {toggleLogged} ) {
 
     try {
       const response = await axios.post('http://localhost:3001/users/login', { email, password });
-      // const response = await axios.post('http://localhost:3001/users/login', { email, password });
-      // localStorage.setItem('user', response.data.name);
-      // localStorage.setItem('email', response.data.email);
-      localStorage.setItem('user', response.data.name);
-      localStorage.setItem('email', response.data.email);
+      localStorage.setItem('name', response.data.user.name);
+      localStorage.setItem('email', response.data.user.email);
+      localStorage.setItem('profile_pic',response.data.user.profile_pic);
+      localStorage.setItem('role', response.data.user.role);
+
       if(response.status === 200){toggleLogged();}
 
       goToHome(); //navigate('/home');

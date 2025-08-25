@@ -49,6 +49,21 @@
     width: 20%;
     cursor: pointer;
 }
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.user-name {
+  font-weight: 500;
+  color: whitesmoke;
+}
 
 /* http://developers.google.com/codelabs/maps-platform/maps-platform-101-react-js?hl=pt-br#0
 https://developers.google.com/maps?hl=pt-br */

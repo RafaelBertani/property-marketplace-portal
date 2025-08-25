@@ -7,22 +7,24 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
   
   const navigate = useNavigate();
   function goToLeave() {
-    navigate('/create');
+    navigate('/');
     toggleSidebar();
     toggleLogged();
-    localStorage.removeItem('user');
+    localStorage.removeItem('name');
     localStorage.removeItem('email');
+    localStorage.removeItem('profile_pic');
+    localStorage.removeItem('role');
   }
   function goToHistory() {
-    navigate('/create');
+    navigate('/history');
     toggleSidebar();
   }
   function goToFavorites() {
-    navigate('/create');
+    navigate('/favorites');
     toggleSidebar();
   }
   function goToProfile() {
-    navigate('/create');
+    navigate('/profile');
     toggleSidebar();
   }
   function goToCreate() {

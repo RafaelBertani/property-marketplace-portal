@@ -6,6 +6,9 @@ import './Header.css'; // opcional, para estilos personalizados
 const Header = ({ toggleSidebar, isLogged }) => {
     
     const navigate = useNavigate();
+    function goToProfile() {
+        navigate('/profile');
+    }
     function goToCreate() {
         navigate('/create');
     }
@@ -30,7 +33,14 @@ const Header = ({ toggleSidebar, isLogged }) => {
             {/* Sign in | Sign up */}
             {isLogged ?
                 (<>
-                    
+                    <div className="user-info" onClick={goToProfile}>
+                        <span className="user-name">{localStorage.getItem('name')}</span>
+                        <img
+                            src={localStorage.getItem('profile_pic')=='null'?'/default.jpg':`data:image/jpeg;base64,${localStorage.getItem('profile_pic')}`}
+                            alt="Perfil"
+                            className="user-avatar"
+                        />
+                    </div>
                 </>)
                 :
                 (<>
