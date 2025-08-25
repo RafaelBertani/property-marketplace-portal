@@ -37,6 +37,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
   }
   function goToHomePage() {
     navigate('/');
+    toggleSidebar();
   }
 
   return (

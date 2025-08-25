@@ -37,7 +37,7 @@ function CreatePage() {
     <div className="content-create">
         <img src='/back.jpg' className='back-create' />
         <form className="create-form" onSubmit={handleSubmit}>
-            <h2>Criar usuário</h2>
+            <h2>Criar conta</h2>
             <input
             type="text"
             placeholder="Nome"
