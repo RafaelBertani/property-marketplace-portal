@@ -1,30 +1,37 @@
 import React, { useState } from 'react';
 import './PropertyFilter.css';
+import CityAutocomplete from './CityAutocomplete';
 
 const propertyTypes = [
   'Apartamento',
   'Casa',
   'Terreno',
   'Comercial',
-  'Kitnet',
   'Outro'
 ];
 
 export default function PropertyFilter({ onFilterChange }) {
   const [filters, setFilters] = useState({
+    transactionType: '',
     types: [],
     minPrice: '',
     maxPrice: '',
     minSize: '',
     maxSize: '',
     hasYard: false,
+    minBedrooms: '',
+    maxBedrooms: '',
+    minBathrooms: '',
+    maxBathrooms: '',
+    parkingSpaces: '',
+    constructionYear: '',
+    city: '',
   });
 
   const handleTypeToggle = (type) => {
     const updatedTypes = filters.types.includes(type)
       ? filters.types.filter((t) => t !== type)
       : [...filters.types, type];
-
     updateFilters({ types: updatedTypes });
   };
 
@@ -37,15 +44,44 @@ export default function PropertyFilter({ onFilterChange }) {
     updateFilters({ hasYard: e.target.checked });
   };
 
+  const handleTransactionChange = (type) => {
+    updateFilters({ transactionType: type });
+  };
+
   const updateFilters = (updatedPart) => {
     const updated = { ...filters, ...updatedPart };
     setFilters(updated);
-    onFilterChange(updated); // envia para o pai
+    onFilterChange(updated);
   };
 
   return (
     <div className="property-filter">
+
+      {/* Tipo de transação */}
       <div className="filter-group">
+        <div className="transaction-type">
+          <button
+            className={`filter-button ${filters.transactionType === 'compra' ? 'active' : ''}`}
+            onClick={() => handleTransactionChange('compra')}
+          >
+            Comprar
+          </button>
+          <button
+            className={`filter-button ${filters.transactionType === 'aluguel' ? 'active' : ''}`}
+            onClick={() => handleTransactionChange('aluguel')}
+          >
+            Alugar
+          </button>
+        </div>
+      </div>
+
+      {/* Cidade */}
+      <div className="filter-group city-group">
+        <CityAutocomplete onSelect={(city) => updateFilters({ city })} />
+      </div>
+
+      {/* Linha com Tipo do imóvel e Cidade */}
+      <div className="filter-group property-types-group">
         <label>Tipo do imóvel:</label>
         <div className="property-types">
           {propertyTypes.map((type) => (
@@ -60,61 +96,131 @@ export default function PropertyFilter({ onFilterChange }) {
         </div>
       </div>
 
-      <div className="filter-group">
-        <label>Preço (R$):</label>
-        <div className="input-range">
+      {/* Grid com 6 colunas na mesma linha */}
+      <div className="filter-grid">
+        {/* Preço */}
+        <div className="filter-group">
+          <label>Preço (R$):</label>
+          <div className="input-range">
+            <input
+              type="number"
+              name="minPrice"
+              placeholder="Mínimo"
+              min="0"
+              step="10000"
+              value={filters.minPrice}
+              onChange={handleInputChange}
+            />
+            <span>—</span>
+            <input
+              type="number"
+              name="maxPrice"
+              placeholder="Máximo"
+              min="0"
+              value={filters.maxPrice}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+
+        {/* Tamanho */}
+        <div className="filter-group">
+          <label>Tamanho (m²):</label>
+          <div className="input-range">
+            <input
+              type="number"
+              name="minSize"
+              placeholder="Mínimo"
+              value={filters.minSize}
+              onChange={handleInputChange}
+            />
+            <span>—</span>
+            <input
+              type="number"
+              name="maxSize"
+              placeholder="Máximo"
+              value={filters.maxSize}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+
+        {/* Quartos */}
+        <div className="filter-group">
+          <label>Quartos:</label>
+          <div className="input-range">
+            <input
+              type="number"
+              name="minBedrooms"
+              placeholder="Mínimo"
+              min="0"
+              value={filters.minBedrooms}
+              onChange={handleInputChange}
+            />
+            <span>—</span>
+            <input
+              type="number"
+              name="maxBedrooms"
+              placeholder="Máximo"
+              min="0"
+              value={filters.maxBedrooms}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+
+        {/* Banheiros */}
+        <div className="filter-group">
+          <label>Banheiros:</label>
+          <div className="input-range">
+            <input
+              type="number"
+              name="minBathrooms"
+              placeholder="Mínimo"
+              min="0"
+              value={filters.minBathrooms}
+              onChange={handleInputChange}
+            />
+            <span>—</span>
+            <input
+              type="number"
+              name="maxBathrooms"
+              placeholder="Máximo"
+              min="0"
+              value={filters.maxBathrooms}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+
+        {/* Vagas na garagem */}
+        <div className="filter-group">
+          <label>Vagas na garagem:</label>
           <input
             type="number"
-            name="minPrice"
-            placeholder="Mínimo"
+            name="parkingSpaces"
             min="0"
-            step="10000"
-            value={filters.minPrice}
+            placeholder="0"
+            value={filters.parkingSpaces}
             onChange={handleInputChange}
           />
-          <span>—</span>
+        </div>
+
+        {/* Ano de construção */}
+        <div className="filter-group">
+          <label>Ano de construção:</label>
           <input
             type="number"
-            name="maxPrice"
-            placeholder="Máximo"
-            min="0"
-            value={filters.maxPrice}
+            name="constructionYear"
+            placeholder="Ex: 2005"
+            min="1900"
+            max={new Date().getFullYear()}
+            value={filters.constructionYear}
             onChange={handleInputChange}
           />
         </div>
       </div>
 
-      <div className="filter-group">
-        <label>Tamanho (m²):</label>
-        <div className="input-range">
-          <input
-            type="number"
-            name="minSize"
-            placeholder="Mínimo"
-            value={filters.minSize}
-            onChange={handleInputChange}
-          />
-          <span>—</span>
-          <input
-            type="number"
-            name="maxSize"
-            placeholder="Máximo"
-            value={filters.maxSize}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-
-      <div className="filter-group">
-        <label>
-          <input
-            type="checkbox"
-            checked={filters.hasYard}
-            onChange={handleCheckboxChange}
-          />
-          Com quintal
-        </label>
-      </div>
     </div>
   );
 }
