@@ -50,7 +50,7 @@ function LoginPage( {toggleLogged} ) {
 
   return (
     <div className="content-login">
-
+        <img src='/back.jpg' className='back-login' />
         <form className="login-form" onSubmit={handleSubmit}>
             <h2>Entrar</h2>
             <input
@@ -70,7 +70,6 @@ function LoginPage( {toggleLogged} ) {
             required
             />
             <button type="submit" className="login-button" style={{ display: "block", marginBottom: "10px" }}>Entrar</button>
-            <button className="login-button" onClick={goToHome} style={{ display: "block", marginBottom: "10px" }}>Home</button>        
             {error && <div style={{ color: "red", marginTop: 8 }}>{error}</div>}
         </form>
 

@@ -32,3 +32,5 @@ npm install dotenv
 cria arquivo .env
 JWT_SECRET_KEY=your-secret-key-here
 
+//npm install '@vis.gl/react-google-maps'
+npm install leaflet react-leaflet
