@@ -21,9 +21,12 @@
 .main-container-filter {
     position: absolute;
     top: 25%;
-    left: 10%;
-    width: 80%;
-}
+    left: 5%;
+    width: 90%;
+    background-color: rgba(57, 57, 99, 0.5);;
+    padding: 10px;
+    border: 2px solid #5555ba;
+  }
 .view-toggle {
   position: absolute;
   top: 10%;

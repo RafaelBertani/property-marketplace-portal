@@ -12,7 +12,7 @@ const propertyTypes = [
 
 export default function PropertyFilter({ onFilterChange }) {
   const [filters, setFilters] = useState({
-    transactionType: '',
+    transactionType: 'buy',
     types: [],
     minPrice: '',
     maxPrice: '',
@@ -40,10 +40,6 @@ export default function PropertyFilter({ onFilterChange }) {
     updateFilters({ [name]: value });
   };
 
-  const handleCheckboxChange = (e) => {
-    updateFilters({ hasYard: e.target.checked });
-  };
-
   const handleTransactionChange = (type) => {
     updateFilters({ transactionType: type });
   };
@@ -54,21 +50,27 @@ export default function PropertyFilter({ onFilterChange }) {
     onFilterChange(updated);
   };
 
+  const search = () => {
+    onFilterChange(filters);
+    //procurar
+  }
+
   return (
     <div className="property-filter">
 
       {/* Tipo de transação */}
       <div className="filter-group">
+        <h4 style={{ color: 'white' }}>O que deseja?</h4>
         <div className="transaction-type">
           <button
-            className={`filter-button ${filters.transactionType === 'compra' ? 'active' : ''}`}
-            onClick={() => handleTransactionChange('compra')}
+            className={`filter-button ${filters.transactionType === 'buy' ? 'active' : ''}`}
+            onClick={() => handleTransactionChange('buy')}
           >
             Comprar
           </button>
           <button
-            className={`filter-button ${filters.transactionType === 'aluguel' ? 'active' : ''}`}
-            onClick={() => handleTransactionChange('aluguel')}
+            className={`filter-button ${filters.transactionType === 'rent' ? 'active' : ''}`}
+            onClick={() => handleTransactionChange('rent')}
           >
             Alugar
           </button>
@@ -80,7 +82,7 @@ export default function PropertyFilter({ onFilterChange }) {
         <CityAutocomplete onSelect={(city) => updateFilters({ city })} />
       </div>
 
-      {/* Linha com Tipo do imóvel e Cidade */}
+      {/* Linha com Tipo do imóvel */}
       <div className="filter-group property-types-group">
         <label>Tipo do imóvel:</label>
         <div className="property-types">
@@ -117,6 +119,7 @@ export default function PropertyFilter({ onFilterChange }) {
               name="maxPrice"
               placeholder="Máximo"
               min="0"
+              step="10000"
               value={filters.maxPrice}
               onChange={handleInputChange}
             />
@@ -131,6 +134,7 @@ export default function PropertyFilter({ onFilterChange }) {
               type="number"
               name="minSize"
               placeholder="Mínimo"
+              step="10"
               value={filters.minSize}
               onChange={handleInputChange}
             />
@@ -139,6 +143,7 @@ export default function PropertyFilter({ onFilterChange }) {
               type="number"
               name="maxSize"
               placeholder="Máximo"
+              step="10"
               value={filters.maxSize}
               onChange={handleInputChange}
             />
@@ -219,6 +224,12 @@ export default function PropertyFilter({ onFilterChange }) {
             onChange={handleInputChange}
           />
         </div>
+      </div>
+
+      <div className="filter-group search-button-wrapper">
+        <button className="search-button" onClick={search}>
+          Buscar
+        </button>
       </div>
 
     </div>

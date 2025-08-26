@@ -10,7 +10,6 @@ export default function CityAutocomplete({ onSelect }) {
     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios')
       .then(res => res.json())
       .then(data => {
-        // Salva só os nomes das cidades (ou pode guardar tudo)
         const cityNames = data.map(c => c.nome);
         setCities(cityNames);
       });
@@ -37,7 +36,7 @@ export default function CityAutocomplete({ onSelect }) {
   };
 
   return (
-    <div style={{ position: 'relative', width: '50%'}}>
+    <div style={{ position: 'relative', width: '100%'}}>
       <input
         type="text"
         placeholder="Digite a cidade"
@@ -48,8 +47,8 @@ export default function CityAutocomplete({ onSelect }) {
         <ul style={{
           position: 'absolute',
           top: '100%',
-          left: 0,
-          right: 0,
+          left: '25%',
+          width: '50%',
           backgroundColor: 'white',
           border: '1px solid #ccc',
           margin: 0,

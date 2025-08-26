@@ -6,16 +6,6 @@ docker-compose up -d
 docker exec -it property_marketplace_portal psql -U postgres
 docker exec -it property_marketplace_portal psql -U postgres -c "CREATE DATABASE pmp;"
 \c pmp
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    foto_perfil BYTEA,
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    funcao VARCHAR(10) CHECK (funcao IN ('ADM', 'USER'))
-);
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -34,3 +24,31 @@ JWT_SECRET_KEY=your-secret-key-here
 
 //npm install '@vis.gl/react-google-maps'
 npm install leaflet react-leaflet
+
+CREATE TABLE properties (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(20) NOT NULL CHECK (type IN ('Apartment', 'House', 'Land', 'Commercial', 'Other')),
+    purpose VARCHAR(20) NOT NULL CHECK (purpose IN ('Buy', 'Rent')),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    price NUMERIC(15, 2) NOT NULL,
+    area_sq_m NUMERIC(10, 2), -- metros quadrados
+    city VARCHAR(50),
+    address VARCHAR(255),
+    latitude NUMERIC(9, 6),
+    longitude NUMERIC(9, 6),
+    bedrooms INT,
+    bathrooms INT,
+    parking_spaces INT,
+    construction_year INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE property_images (
+    id SERIAL PRIMARY KEY,
+    property_id INT NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    image_data BYTEA NOT NULL,
+    image_name VARCHAR(255),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

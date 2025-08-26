@@ -15,6 +15,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
     localStorage.removeItem('profile_pic');
     localStorage.removeItem('role');
   }
+  function goToListings() {
+    navigate('/listings');
+    toggleSidebar();
+  }
   function goToHistory() {
     navigate('/history');
     toggleSidebar();
@@ -47,18 +51,51 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
         <button className="close-btn" onClick={toggleSidebar}>&times;</button>
         <nav>
           <ul className="sidebar-list">
-            <li className="sidebar-item"><a onClick={goToHomePage}>Home</a></li>
+            <li className="sidebar-item">
+              <a onClick={goToHomePage}>
+                <i className="fas fa-home" style={{ marginRight: '8px' }}></i> Home
+              </a>
+            </li>
             {isLogged ? (
               <>
-                <li className="sidebar-item"><a onClick={goToProfile}>My profile</a></li>
-                <li className="sidebar-item"><a onClick={goToFavorites}>My favorites</a></li>
-                <li className="sidebar-item"><a onClick={goToHistory}>My history</a></li>
-                <li className="sidebar-item"><a onClick={goToLeave}>Leave</a></li>
+                <li className="sidebar-item">
+                  <a onClick={goToProfile}>
+                    <i className="fas fa-user" style={{ marginRight: '8px' }}></i> My profile
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToFavorites}>
+                    <i className="fas fa-heart" style={{ marginRight: '8px' }}></i> My favorites
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToListings}>
+                    <i className="fas fa-list" style={{ marginRight: '8px' }}></i> My listings
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToHistory}>
+                    <i className="fas fa-history" style={{ marginRight: '8px' }}></i> My history
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToLeave}>
+                    <i className="fas fa-sign-out-alt" style={{ marginRight: '8px' }}></i> Leave
+                  </a>
+                </li>
               </>
             ) : (
               <>
-                <li className="sidebar-item"><a onClick={goToLogin}>Sign in</a></li>
-                <li className="sidebar-item"><a onClick={goToCreate}>Sign up</a></li>
+                <li className="sidebar-item">
+                  <a onClick={goToLogin}>
+                    <i className="fas fa-sign-in-alt" style={{ marginRight: '8px' }}></i> Sign in
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToCreate}>
+                    <i className="fas fa-user-plus" style={{ marginRight: '8px' }}></i> Sign up
+                  </a>
+                </li>
               </>
             )}
           </ul>
