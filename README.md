@@ -52,3 +52,5 @@ CREATE TABLE property_images (
     image_name VARCHAR(255),
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+cria um .env com: JWT_SECRET_KEY=ifthispasswordwentonlineifailed
