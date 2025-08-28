@@ -4,14 +4,6 @@ const controllers = require('./controllers');
 
 const router = express.Router();
 
-router.post('/login',controllers.login);
-router.post('/create',controllers.create);
-
-
-// router.get('/', controllers.getAllNotes); //router.get('/', getAllNotes);
-// router.get('/:id', controllers.getNote);
-// router.post('/add-note', controllers.addNote);
-// router.post('/edit-note/:id', controllers.editNote);
-// router.post('/eventoX', controllers.acao)
+router.post('/filter', controllers.filter);
 
 module.exports = router;

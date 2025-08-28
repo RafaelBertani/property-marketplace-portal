@@ -3,11 +3,11 @@ import './PropertyFilter.css';
 import CityAutocomplete from './CityAutocomplete';
 
 const propertyTypes = [
-  'Apartamento',
-  'Casa',
-  'Terreno',
-  'Comercial',
-  'Outro'
+  { value: 'Apartment', label: 'Apartamento' },
+  { value: 'House', label: 'Casa' },
+  { value: 'Land', label: 'Terreno' },
+  { value: 'Commercial', label: 'Comercial' },
+  { value: 'Other', label: 'Outro' }
 ];
 
 export default function PropertyFilter({ onFilterChange }) {
@@ -18,7 +18,6 @@ export default function PropertyFilter({ onFilterChange }) {
     maxPrice: '',
     minSize: '',
     maxSize: '',
-    hasYard: false,
     minBedrooms: '',
     maxBedrooms: '',
     minBathrooms: '',
@@ -28,10 +27,10 @@ export default function PropertyFilter({ onFilterChange }) {
     city: '',
   });
 
-  const handleTypeToggle = (type) => {
-    const updatedTypes = filters.types.includes(type)
-      ? filters.types.filter((t) => t !== type)
-      : [...filters.types, type];
+  const handleTypeToggle = (typeValue) => {
+    const updatedTypes = filters.types.includes(typeValue)
+      ? filters.types.filter((t) => t !== typeValue)
+      : [...filters.types, typeValue];
     updateFilters({ types: updatedTypes });
   };
 
@@ -47,13 +46,12 @@ export default function PropertyFilter({ onFilterChange }) {
   const updateFilters = (updatedPart) => {
     const updated = { ...filters, ...updatedPart };
     setFilters(updated);
-    onFilterChange(updated);
+    // onFilterChange(updated);  // você pode habilitar se quiser atualização instantânea
   };
 
   const search = () => {
     onFilterChange(filters);
-    //procurar
-  }
+  };
 
   return (
     <div className="property-filter">
@@ -82,23 +80,23 @@ export default function PropertyFilter({ onFilterChange }) {
         <CityAutocomplete onSelect={(city) => updateFilters({ city })} />
       </div>
 
-      {/* Linha com Tipo do imóvel */}
+      {/* Tipo do imóvel */}
       <div className="filter-group property-types-group">
         <label>Tipo do imóvel:</label>
         <div className="property-types">
           {propertyTypes.map((type) => (
             <button
-              key={type}
-              className={`filter-button ${filters.types.includes(type) ? 'active' : ''}`}
-              onClick={() => handleTypeToggle(type)}
+              key={type.value}
+              className={`filter-button ${filters.types.includes(type.value) ? 'active' : ''}`}
+              onClick={() => handleTypeToggle(type.value)}
             >
-              {type}
+              {type.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Grid com 6 colunas na mesma linha */}
+      {/* Grid de filtros */}
       <div className="filter-grid">
         {/* Preço */}
         <div className="filter-group">

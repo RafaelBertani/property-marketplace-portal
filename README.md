@@ -41,6 +41,7 @@ CREATE TABLE properties (
     bathrooms INT,
     parking_spaces INT,
     construction_year INT,
+    likes INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
