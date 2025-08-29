@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom'; // npm install react-router-dom
-import axios from 'axios'; // npm install axios
+import { useState } from 'react';
+import axios from 'axios';
 import './HomeStyles.css';
 import MapView from '../Components/MapView';
 import PropertyFilter from '../Components/PropertyFilter';
 import PropertyCard from '../Components/PropertyCard';
 
 function HomePage() {
-
   const [view, setView] = useState('filter');  
   const [properties, setProperties] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -21,22 +19,53 @@ function HomePage() {
 
   const handleFilterChange = async (filters) => {
     setShowResults(true);
-    
     try {
-      const response = await axios.post('http://localhost:3002/properties/filter', { filters });
-      console.log(response.data.properties);
+      const response = await axios.post('http://localhost:3002/properties/filter', { 
+        id: localStorage.getItem('id'), 
+        filters 
+      });
       setProperties(response.data.properties);
     } catch (error) {
       console.error('Erro ao buscar imóveis:', error);
     }
-
-    console.log('Filtros selecionados:', filters);
   };
-  
+
+  const handleToggleFavorite = async (propertyId, isLiked) => {
+    const userId = localStorage.getItem('id');
+    if (!userId) {
+      alert('Você precisa estar logado para favoritar uma propriedade.');
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        await axios.post('http://localhost:3002/properties/like', { userId, propertyId });
+      } else {
+        await axios.delete('http://localhost:3002/properties/like', {
+          data: { userId, propertyId }
+        });
+      }
+
+      // 🔑 Atualiza o estado local para refletir a mudança
+      setProperties((prev) =>
+        prev.map((p) =>
+          p.id === propertyId ? { ...p, is_liked: isLiked } : p
+        )
+      );
+
+    } catch (error) {
+      console.error("Erro ao atualizar favorito:", error);
+    }
+  };
+
+  const loadMap = async () => {
+    const response = await axios.post('http://localhost:3002/properties/all');
+    setProperties(response.data.properties);
+    setView('map');
+  };
+
   return (
     <div className="content-home">
-
-      {/*<img src='/back.jpg' className='back-home' />*/}
       <div className="view-toggle">
         <button
           onClick={() => setView('filter')}
@@ -47,7 +76,7 @@ function HomePage() {
           Ver Filtros
         </button>
         <button
-          onClick={() => setView('map')}
+          onClick={loadMap}
           style={{
             backgroundColor: view === 'map' ? '#0056b3' : '#007bff',
           }}
@@ -55,9 +84,10 @@ function HomePage() {
           Ver Mapa
         </button>
       </div>
+
       <div className={view === 'map' ? 'main-container-map' : 'main-container-filter'}>
-          {view === 'map' && <MapView />}
-          {view === 'filter' && <PropertyFilter onFilterChange={handleFilterChange} />}
+        {view === 'map' && <MapView properties={properties} />}
+        {view === 'filter' && <PropertyFilter onFilterChange={handleFilterChange} />}
       </div>
 
       {view === 'filter' && showResults && (
@@ -65,29 +95,20 @@ function HomePage() {
           {properties.length === 0 ? (
             <p>Nenhum imóvel encontrado.</p>
           ) : (
-            properties.map((property, index) => (
+            properties.map((property) => (
               <PropertyCard
-                key={index}
-                type={property.type}
-                title={property.title}
-                price={property.price}
-                area_sq_m={property.area_sq_m}
-                city={property.city}
-                address={property.address}
-                bedrooms={property.bedrooms}
-                bathrooms={property.bathrooms}
-                parking_spaces={property.parking_spaces}
-                construction_year={property.construction_year}
+                key={property.id}
+                {...property}
                 created_at={formatDate(property.created_at)}
+                onToggleFavorite={handleToggleFavorite}
               />
             ))
           )}
         </div>
-      )};
+      )}
 
-
+      <div className='end'><span></span></div>
     </div>
-    
   );
 }
 

@@ -54,4 +54,10 @@ CREATE TABLE property_images (
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE property_likes (
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    property_id INT NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, property_id)
+);
+
 cria um .env com: JWT_SECRET_KEY=ifthispasswordwentonlineifailed

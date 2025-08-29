@@ -63,3 +63,6 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
 }
+.end {
+  height: 120px;
+}

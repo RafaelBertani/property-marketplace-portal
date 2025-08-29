@@ -5,5 +5,9 @@ const controllers = require('./controllers');
 const router = express.Router();
 
 router.post('/filter', controllers.filter);
+router.post('/like', controllers.like);
+router.delete('/like', controllers.dislike);
+router.post('/all', controllers.getAll);
+router.post('/favorites', controllers.getFavorites);
 
 module.exports = router;

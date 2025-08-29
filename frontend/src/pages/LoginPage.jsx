@@ -35,6 +35,7 @@ function LoginPage( {toggleLogged} ) {
 
     try {
       const response = await axios.post('http://localhost:3001/users/login', { email, password });
+      localStorage.setItem('id', response.data.user.id);
       localStorage.setItem('name', response.data.user.name);
       localStorage.setItem('email', response.data.user.email);
       localStorage.setItem('profile_pic',response.data.user.profile_pic);

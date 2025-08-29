@@ -1,6 +1,6 @@
 const pool = require('./database/databaseConfig');
 
-async function applyFilters(filters) {
+async function applyFilters(userId, filters = {}) {
   const {
     city,
     constructionYear,
@@ -26,71 +26,89 @@ async function applyFilters(filters) {
         WHERE pi.property_id = p.id
           AND pi.image_name = 'main'
         LIMIT 1
-      ) AS main_image
+      ) AS main_image,
+      EXISTS (
+        SELECT 1
+        FROM property_likes pl
+        WHERE pl.property_id = p.id AND pl.user_id = $1
+      ) AS is_liked
     FROM properties p
     WHERE 1=1
   `;
-  const values = [];
-  let count = 1;
+
+  const values = [userId || 0]; // $1 sempre é userId
+  let count = 2; // próximos começam no $2
 
   if (city) {
-    query += ` AND city ILIKE $${count++}`;
+    query += ` AND city ILIKE $${count}`;
     values.push(`%${city}%`);
+    count++;
   }
 
   if (constructionYear) {
-    query += ` AND construction_year = $${count++}`;
+    query += ` AND construction_year = $${count}`;
     values.push(constructionYear);
+    count++;
   }
 
   if (minPrice) {
-    query += ` AND price >= $${count++}`;
+    query += ` AND price >= $${count}`;
     values.push(minPrice);
+    count++;
   }
 
   if (maxPrice) {
-    query += ` AND price <= $${count++}`;
+    query += ` AND price <= $${count}`;
     values.push(maxPrice);
+    count++;
   }
 
   if (minSize) {
-    query += ` AND area_sq_m >= $${count++}`;
+    query += ` AND area_sq_m >= $${count}`;
     values.push(minSize);
+    count++;
   }
 
   if (maxSize) {
-    query += ` AND area_sq_m <= $${count++}`;
+    query += ` AND area_sq_m <= $${count}`;
     values.push(maxSize);
+    count++;
   }
 
   if (minBedrooms) {
-    query += ` AND bedrooms >= $${count++}`;
+    query += ` AND bedrooms >= $${count}`;
     values.push(minBedrooms);
+    count++;
   }
 
   if (maxBedrooms) {
-    query += ` AND bedrooms <= $${count++}`;
+    query += ` AND bedrooms <= $${count}`;
     values.push(maxBedrooms);
+    count++;
   }
 
   if (minBathrooms) {
-    query += ` AND bathrooms >= $${count++}`;
+    query += ` AND bathrooms >= $${count}`;
     values.push(minBathrooms);
+    count++;
   }
 
   if (maxBathrooms) {
-    query += ` AND bathrooms <= $${count++}`;
+    query += ` AND bathrooms <= $${count}`;
     values.push(maxBathrooms);
+    count++;
   }
 
   if (parkingSpaces) {
-    query += ` AND parking_spaces >= $${count++}`;
+    query += ` AND parking_spaces >= $${count}`;
     values.push(parkingSpaces);
+    count++;
   }
 
   if (transactionType) {
-    query += ` AND purpose = $${count++}`;
+    query += ` AND purpose = $${count}`;
     values.push(transactionType.charAt(0).toUpperCase() + transactionType.slice(1));
+    count++;
   }
 
   if (types && types.length > 0) {
@@ -107,6 +125,7 @@ async function applyFilters(filters) {
 
     const rows = result.rows.map(row => ({
       ...row,
+      is_liked: row.is_liked,
       main_image: row.main_image 
         ? row.main_image.toString('base64') 
         : null
@@ -119,6 +138,135 @@ async function applyFilters(filters) {
   }
 }
 
+async function addLike(userId, propertyId) {
+  try {
+    // Verifica se o like já existe
+    const result = await pool.query(
+      'SELECT 1 FROM property_likes WHERE user_id = $1 AND property_id = $2',
+      [userId, propertyId]
+    );
+
+    if (result.rowCount > 0) {
+      throw new Error('Você já curtiu esta propriedade.');
+    }
+
+    // Adiciona o like na tabela
+    await pool.query(
+      'INSERT INTO property_likes (user_id, property_id) VALUES ($1, $2)',
+      [userId, propertyId]
+    );
+
+    // Incrementa o contador de likes da propriedade
+    await pool.query(
+      'UPDATE properties SET likes = likes + 1 WHERE id = $1',
+      [propertyId]
+    );
+
+  } catch (error) {
+    console.error('Erro em addLike:', error);
+    throw error;
+  }
+}
+
+async function removeLike(userId, propertyId) {
+  try {
+    // Verifica se o like existe
+    const result = await pool.query(
+      'SELECT 1 FROM property_likes WHERE user_id = $1 AND property_id = $2',
+      [userId, propertyId]
+    );
+
+    if (result.rowCount === 0) {
+      throw new Error('Você não curtiu esta propriedade.');
+    }
+
+    // Remove o like da tabela
+    await pool.query(
+      'DELETE FROM property_likes WHERE user_id = $1 AND property_id = $2',
+      [userId, propertyId]
+    );
+
+    // Decrementa o contador de likes da propriedade
+    await pool.query(
+      'UPDATE properties SET likes = GREATEST(likes - 1, 0) WHERE id = $1',
+      [propertyId]
+    );
+
+  } catch (error) {
+    console.error('Erro em removeLike:', error);
+    throw error;
+  }
+}
+
+async function findAll() {
+  try {
+    const query = `
+      SELECT 
+        id,
+        type,
+        title,
+        price,
+        area_sq_m,
+        city,
+        address,
+        bedrooms,
+        bathrooms,
+        parking_spaces,
+        construction_year,
+        latitude,
+        longitude,
+        created_at
+      FROM properties
+      ORDER BY created_at DESC;
+    `;
+    const result = await pool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error("Erro ao buscar propriedades:", error);
+    throw new Error("Erro");
+  }
+}
+
+async function allFavorites(userId) {
+  const query = `
+    SELECT 
+      p.*,
+      (
+        SELECT pi.image_data
+        FROM property_images pi
+        WHERE pi.property_id = p.id
+          AND pi.image_name = 'main'
+        LIMIT 1
+      ) AS main_image,
+      TRUE AS is_liked
+    FROM properties p
+    INNER JOIN property_likes pl ON pl.property_id = p.id
+    WHERE pl.user_id = $1
+    ORDER BY p.created_at DESC
+  `;
+
+  try {
+    const result = await pool.query(query, [userId]);
+
+    const rows = result.rows.map(row => ({
+      ...row,
+      is_liked: true, // sempre true porque já é favorito
+      main_image: row.main_image 
+        ? row.main_image.toString('base64') 
+        : null
+    }));
+
+    return rows;
+  } catch (error) {
+    console.error('Erro ao buscar favoritos:', error);
+    throw error;
+  }
+}
+
 module.exports = {
-  applyFilters
+  applyFilters,
+  addLike,
+  removeLike,
+  findAll,
+  allFavorites
 };

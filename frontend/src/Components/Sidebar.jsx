@@ -10,6 +10,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
     navigate('/');
     toggleSidebar();
     toggleLogged();
+    localStorage.removeItem('id');
     localStorage.removeItem('name');
     localStorage.removeItem('email');
     localStorage.removeItem('profile_pic');
@@ -17,10 +18,6 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
   }
   function goToListings() {
     navigate('/listings');
-    toggleSidebar();
-  }
-  function goToHistory() {
-    navigate('/history');
     toggleSidebar();
   }
   function goToFavorites() {
@@ -71,11 +68,6 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
                 <li className="sidebar-item">
                   <a onClick={goToListings}>
                     <i className="fas fa-list" style={{ marginRight: '8px' }}></i> My listings
-                  </a>
-                </li>
-                <li className="sidebar-item">
-                  <a onClick={goToHistory}>
-                    <i className="fas fa-history" style={{ marginRight: '8px' }}></i> My history
                   </a>
                 </li>
                 <li className="sidebar-item">

@@ -6,21 +6,47 @@
   height: 200px;
   font-family: sans-serif;
   display: flex;
+  overflow: hidden;
 }
 
-.property-image {
+.image-container {
   position: relative;
   height: 100%;
   max-width: 40%;
-  left: 0%;
-  float: left;
+}
+
+.property-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
   border-radius: 8px;
+}
+
+.like-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  border-radius: 50%;
+  padding: 6px;
+}
+
+.like-btn .fa-heart {
+  color: #666; /* cor padrão */
+  transition: color 0.3s ease;
+}
+
+.like-btn .fa-heart.liked {
+  color: #e63946; /* vermelho ao clicar */
 }
 
 .property-details {
   position: relative;
   width: max-content;
-  float: right;
+  padding-left: 12px;
 }
 
 .property-type {
