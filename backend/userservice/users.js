@@ -23,8 +23,8 @@ const verifyLogin = async (email, password) => {
     if (!isPasswordCorrect) {
       return { error: 'Senha incorreta' };
     }
-
-    return { user: { id: user.id, name: user.name, email: user.email, profile_pic: user.profile_pic, role: user.role } };
+    
+    return { user: { id: user.id, name: user.name, email: user.email, profile_pic: ""+user.profile_pic, role: user.role } };
     
   } catch (error) {
     console.error(error);
@@ -118,8 +118,56 @@ const verifyCreateAdm = async (email, name, password) => {
   
 };
 
+const updatePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    // 1. Busca usuário
+    const queryUser = "SELECT password FROM users WHERE id = $1";
+    const result = await pool.query(queryUser, [userId]);
+
+    if (result.rows.length === 0) {
+      return { success: false, message: "Usuário não encontrado." };
+    }
+
+    const hashedPassword = result.rows[0].password;
+
+    // 2. Confere senha atual
+    const isMatch = await bcrypt.compare(currentPassword, hashedPassword);
+    if (!isMatch) {
+      return { success: false, message: "Senha atual incorreta." };
+    }
+
+    // 3. Hash da nova senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+    // 4. Atualiza
+    const updateQuery = "UPDATE users SET password = $1 WHERE id = $2";
+    await pool.query(updateQuery, [hashedNewPassword, userId]);
+
+    return { success: true, message: "Senha alterada com sucesso!" };
+  } catch (err) {
+    console.error("Erro no updatePassword:", err);
+    return { success: false, message: "Erro ao atualizar senha." };
+  }
+}
+
+const updateProfilePic = async (userId, profile_pic) => {
+  try {
+    const result = await pool.query(
+      "UPDATE users SET profile_pic = $1 WHERE id = $2 RETURNING id",
+      [profile_pic, userId]
+    );
+    return result.rowCount > 0;
+  } catch (err) {
+    throw err;
+  }
+}
+
+
 module.exports = {
   getAllUsers,
   verifyLogin,
-  verifyCreateUser
+  verifyCreateUser,
+  updatePassword,
+  updateProfilePic
 };

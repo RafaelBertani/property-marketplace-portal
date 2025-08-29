@@ -16,6 +16,10 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
     localStorage.removeItem('profile_pic');
     localStorage.removeItem('role');
   }
+  function goToList() {
+    navigate('/list');
+    toggleSidebar();
+  }
   function goToListings() {
     navigate('/listings');
     toggleSidebar();
@@ -68,6 +72,11 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
                 <li className="sidebar-item">
                   <a onClick={goToListings}>
                     <i className="fas fa-list" style={{ marginRight: '8px' }}></i> My listings
+                  </a>
+                </li>
+                <li className="sidebar-item">
+                  <a onClick={goToList}>
+                    <i className="fas fa-plus-square" style={{ marginRight: '8px' }}></i> List a property
                   </a>
                 </li>
                 <li className="sidebar-item">

@@ -65,6 +65,49 @@ async function create(req, res) {
 
 };
 
+async function password(req, res) {
+    try {
+    const { userId, currentPassword, newPassword } = req.body;
+
+    if (!userId || !currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+    }
+
+    const result = await users.updatePassword(userId, currentPassword, newPassword);
+
+    if (result.success) {
+      return res.status(200).json({ message: "Senha alterada com sucesso!" });
+    } else {
+      return res.status(401).json({ message: "Senha atual incorreta." });
+    }
+  } catch (err) {
+    console.error("Erro ao alterar senha:", err);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+}
+
+async function changeProfilePic(req, res) {
+  const { userId, profile_pic } = req.body;
+
+  if (!userId || !profile_pic) {
+    return res.status(400).json({ message: "Usuário ou imagem não informados." });
+  }
+
+  try {
+    const updated = await users.updateProfilePic(userId, profile_pic);
+
+    if (!updated) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    return res.status(200).json({ message: "Foto de perfil atualizada com sucesso." });
+  } catch (err) {
+    console.error("Erro ao atualizar foto de perfil:", err);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+}
+
+
 // function getAllNotes(req, res) {
 //   res.status(201).json( notes.getAll() );
 // }
@@ -102,5 +145,7 @@ async function create(req, res) {
 
 module.exports = {
   login,
-  create
+  create,
+  password,
+  changeProfilePic
 };
