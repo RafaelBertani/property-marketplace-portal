@@ -9,5 +9,7 @@ router.post('/like', controllers.like);
 router.delete('/like', controllers.dislike);
 router.post('/all', controllers.getAll);
 router.post('/favorites', controllers.getFavorites);
+router.get('/user/:id',controllers.listed);
+router.delete('/:id',controllers.deleteProperty);
 
 module.exports = router;

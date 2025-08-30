@@ -105,10 +105,45 @@ async function getFavorites(req, res) {
 
 }
 
+async function listed(req, res) {
+  const { id } = req.params;
+
+  try {
+    const listings = await properties.getMyListing(id); // chama a função do repository
+    return res.json(listings);
+  } catch (error) {
+    console.error("Erro ao buscar listagens:", error);
+    return res.status(500).json({ error: "Erro ao carregar suas listagens." });
+  }
+};
+
+async function deleteProperty(req, res) {
+  try {
+    const { id } = req.params; // id da propriedade enviada na rota
+
+    if (!id) {
+      return res.status(400).json({ error: "ID da propriedade é obrigatório" });
+    }
+
+    const result = await properties.removeProperty(id);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Propriedade não encontrada" });
+    }
+
+    return res.status(200).json({ message: "Propriedade removida com sucesso" });
+  } catch (error) {
+    console.error("Erro ao deletar propriedade:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+};
+
 module.exports = {
   filter,
   like,
   dislike,
   getAll,
-  getFavorites
+  getFavorites,
+  listed,
+  deleteProperty
 };

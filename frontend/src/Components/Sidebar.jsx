@@ -59,41 +59,41 @@ const Sidebar = ({ isOpen, toggleSidebar, isLogged, toggleLogged }) => {
             </li>
             {isLogged ? (
               <>
-                <li className="sidebar-item">
-                  <a onClick={goToProfile}>
+                <li className="sidebar-item" onClick={goToProfile}>
+                  <a>
                     <i className="fas fa-user" style={{ marginRight: '8px' }}></i> My profile
                   </a>
                 </li>
-                <li className="sidebar-item">
-                  <a onClick={goToFavorites}>
+                <li className="sidebar-item" onClick={goToFavorites}>
+                  <a>
                     <i className="fas fa-heart" style={{ marginRight: '8px' }}></i> My favorites
                   </a>
                 </li>
-                <li className="sidebar-item">
-                  <a onClick={goToListings}>
+                <li className="sidebar-item" onClick={goToListings}>
+                  <a>
                     <i className="fas fa-list" style={{ marginRight: '8px' }}></i> My listings
                   </a>
                 </li>
-                <li className="sidebar-item">
-                  <a onClick={goToList}>
+                <li className="sidebar-item" onClick={goToList}>
+                  <a>
                     <i className="fas fa-plus-square" style={{ marginRight: '8px' }}></i> List a property
                   </a>
                 </li>
-                <li className="sidebar-item">
-                  <a onClick={goToLeave}>
+                <li className="sidebar-item" onClick={goToLeave}>
+                  <a>
                     <i className="fas fa-sign-out-alt" style={{ marginRight: '8px' }}></i> Leave
                   </a>
                 </li>
               </>
             ) : (
               <>
-                <li className="sidebar-item">
-                  <a onClick={goToLogin}>
+                <li className="sidebar-item" onClick={goToLogin}>
+                  <a>
                     <i className="fas fa-sign-in-alt" style={{ marginRight: '8px' }}></i> Sign in
                   </a>
                 </li>
-                <li className="sidebar-item">
-                  <a onClick={goToCreate}>
+                <li className="sidebar-item" onClick={goToCreate}>
+                  <a>
                     <i className="fas fa-user-plus" style={{ marginRight: '8px' }}></i> Sign up
                   </a>
                 </li>

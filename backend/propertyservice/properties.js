@@ -263,10 +263,46 @@ async function allFavorites(userId) {
   }
 }
 
+async function getMyListing(userId) {
+  try {
+    const query = `
+      SELECT 
+        id,
+        type,
+        title,
+        price,
+        area_sq_m,
+        city,
+        address,
+        bedrooms,
+        bathrooms,
+        parking_spaces,
+        construction_year,
+        created_at
+      FROM properties
+      WHERE user_id = $1
+      ORDER BY created_at DESC;
+    `;
+
+    const { rows } = await pool.query(query, [userId]);
+    return rows;
+  } catch (error) {
+    console.error("Erro no getMyListing:", error);
+    throw error;
+  }
+};
+
+async function removeProperty(propertyId) {
+    const query = "DELETE FROM properties WHERE id = $1";
+    return await pool.query(query, [propertyId]);
+};
+
 module.exports = {
   applyFilters,
   addLike,
   removeLike,
   findAll,
-  allFavorites
+  allFavorites,
+  getMyListing,
+  removeProperty
 };

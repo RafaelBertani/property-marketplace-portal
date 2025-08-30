@@ -1,0 +1,49 @@
+.my-listings {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 80%;
+  padding: 20px;
+  background-color: rgba(57, 57, 99, 0.5);
+  border-radius: 8px;
+}
+
+.my-listings h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.listings-grid {
+display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.loading,
+.error,
+.no-listings {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.2rem;
+}
+
+.listing-wrapper {
+  position: relative;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: rgba(200, 0, 0, 1);
+}
