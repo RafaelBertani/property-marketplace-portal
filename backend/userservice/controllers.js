@@ -86,6 +86,23 @@ async function password(req, res) {
   }
 }
 
+async function remove(req, res) {
+    try {
+    const { userId } = req.body;
+
+    const result = await users.deleteAccount(userId);
+
+    if (result.success) {
+      return res.status(200).json({ message: "Conta removida com sucesso!" });
+    } else {
+      return res.status(401).json({ message: "Erro ao remover conta." });
+    }
+  } catch (err) {
+    console.error("Erro ao remover conta:", err);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+}
+
 async function changeProfilePic(req, res) {
   const { userId, profile_pic } = req.body;
 
@@ -147,5 +164,6 @@ module.exports = {
   login,
   create,
   password,
+  remove,
   changeProfilePic
 };

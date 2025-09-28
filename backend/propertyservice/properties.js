@@ -1,4 +1,5 @@
 const pool = require('./database/databaseConfig');
+const multer = require("multer");
 
 async function applyFilters(userId, filters = {}) {
   const {
@@ -122,7 +123,6 @@ async function applyFilters(userId, filters = {}) {
 
   try {
     const result = await pool.query(query, values);
-
     const rows = result.rows.map(row => ({
       ...row,
       is_liked: row.is_liked,
@@ -297,6 +297,63 @@ async function removeProperty(propertyId) {
     return await pool.query(query, [propertyId]);
 };
 
+async function addNewProperty(data, mainPhoto, secondaryPhotos) {
+  const client = await pool.connect(); // <-- corrigido
+
+  try {
+    await client.query("BEGIN");
+
+    const insertProperty = `
+      INSERT INTO properties 
+        (user_id, type, purpose, title, price, area_sq_m, city, address, bedrooms, bathrooms, parking_spaces, construction_year) 
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+      RETURNING id
+    `;
+    const result = await client.query(insertProperty, [
+      data.user_id,
+      data.type,
+      data.purpose,
+      data.title,
+      data.price,
+      data.area_sq_m,
+      data.city,
+      data.address,
+      data.bedrooms,
+      data.bathrooms,
+      data.parking_spaces,
+      data.construction_year,
+    ]);
+
+    const propertyId = result.rows[0].id;
+
+    // foto principal
+    if (mainPhoto) {
+      await client.query(
+        "INSERT INTO property_images (property_id, image_data, is_main) VALUES ($1, $2, true)",
+        [propertyId, mainPhoto.buffer]
+      );
+    }
+
+    // fotos secundárias
+    if (secondaryPhotos && secondaryPhotos.length > 0) {
+      for (const photo of secondaryPhotos) {
+        await client.query(
+          "INSERT INTO property_images (property_id, image_data, is_main) VALUES ($1, $2, false)",
+          [propertyId, photo.buffer]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    return propertyId;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   applyFilters,
   addLike,
@@ -304,5 +361,6 @@ module.exports = {
   findAll,
   allFavorites,
   getMyListing,
-  removeProperty
+  removeProperty,
+  addNewProperty
 };

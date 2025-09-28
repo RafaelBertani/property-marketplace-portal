@@ -9,7 +9,6 @@ async function filter (req, res) {
   
   try{
     const result = await properties.applyFilters(id, filters || {});
-
     return res.status(200).json({
         message: 'Busca bem sucedida',
         properties: result
@@ -138,6 +137,35 @@ async function deleteProperty(req, res) {
   }
 };
 
+async function listProperty(req, res) {
+  try {
+    const data = {
+      user_id: req.body.user_id,
+      type: req.body.type,
+      purpose: req.body.purpose,
+      title: req.body.title,
+      price: req.body.price,
+      area_sq_m: req.body.area_sq_m,
+      city: req.body.city,
+      address: req.body.address,
+      bedrooms: req.body.bedrooms,
+      bathrooms: req.body.bathrooms,
+      parking_spaces: req.body.parking_spaces,
+      construction_year: req.body.construction_year,
+    };
+
+    const mainPhoto = req.files['mainPhoto'] ? req.files['mainPhoto'][0] : null;
+    const secondaryPhotos = req.files['secondaryPhotos'] || [];
+
+    const propertyId = await properties.addNewProperty(data, mainPhoto, secondaryPhotos);
+
+    res.status(201).json({ success: true, propertyId });
+  } catch (err) {
+    console.error("Error listing property:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 module.exports = {
   filter,
   like,
@@ -145,5 +173,6 @@ module.exports = {
   getAll,
   getFavorites,
   listed,
-  deleteProperty
+  deleteProperty,
+  listProperty
 };

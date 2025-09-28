@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import "./ProfilePage.css";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
+  const navigate = useNavigate();
+
   const id = localStorage.getItem("id");
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
@@ -44,39 +47,53 @@ function ProfilePage() {
   };
 
   const handlePasswordSubmit = async () => {
-    
     if (newPassword !== confirmPassword) {
-        setMessage("As novas senhas não coincidem.");
-        return;
+      setMessage("As novas senhas não coincidem.");
+      return;
     }
 
     try {
-        const response = await axios.post("http://localhost:3001/users/change-password", {
+      const response = await axios.post("http://localhost:3001/users/change-password", {
         userId: id,
         currentPassword: currentPassword,
         newPassword: newPassword,
-        });
+      });
 
-        // sucesso
-        setMessage(response.data.message || "Senha alterada com sucesso!");
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-        setShowPasswordForm(false);
+      setMessage(response.data.message || "Senha alterada com sucesso!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPasswordForm(false);
     } catch (err) {
-        if (err.response) {
-        // resposta do servidor com status específico
+      if (err.response) {
         if (err.response.status === 401) {
-            setMessage("Senha atual incorreta.");
+          setMessage("Senha atual incorreta.");
         } else if (err.response.status === 400) {
-            setMessage("Preencha todos os campos.");
+          setMessage("Preencha todos os campos.");
         } else {
-            setMessage(err.response.data.message || "Erro interno no servidor.");
+          setMessage(err.response.data.message || "Erro interno no servidor.");
         }
-        } else {
-        // erro sem resposta (ex.: servidor offline)
+      } else {
         setMessage("Não foi possível conectar ao servidor.");
-        }
+      }
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm("Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita!");
+    if (!confirmDelete) return;
+
+    try {
+      await axios.post("http://localhost:3001/users/delete-account", {
+        userId: id,
+      });
+
+      // Limpar dados locais e redirecionar
+      localStorage.clear();
+      navigate("/");
+    } catch (error) {
+      console.error("Erro ao excluir conta:", error);
+      alert("Erro ao excluir conta. Tente novamente.");
     }
   };
 
@@ -113,18 +130,10 @@ function ProfilePage() {
       <main className="profile-content">
         <h2>Informações da conta</h2>
         <ul>
-          <li>
-            <strong>ID:</strong> {id}
-          </li>
-          <li>
-            <strong>Nome:</strong> {name}
-          </li>
-          <li>
-            <strong>Email:</strong> {email}
-          </li>
-          <li>
-            <strong>Role:</strong> {role}
-          </li>
+          <li><strong>ID:</strong> {id}</li>
+          <li><strong>Nome:</strong> {name}</li>
+          <li><strong>Email:</strong> {email}</li>
+          <li><strong>Role:</strong> {role}</li>
         </ul>
 
         <div className="password-section">
@@ -162,6 +171,13 @@ function ProfilePage() {
           )}
 
           {message && <p className="password-message">{message}</p>}
+        </div>
+
+        {/* Botão de excluir conta */}
+        <div className="delete-account-section">
+          <button className="btn-delete-account" onClick={handleDeleteAccount}>
+            Excluir Conta
+          </button>
         </div>
       </main>
     </div>

@@ -1,18 +1,18 @@
-# Usa uma imagem oficial do Node.js
 FROM node:20.16.0
 
-# Define o diretório de trabalho dentro do container
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências e instala
-COPY package*.json ./
+# Copia apenas os package.json do propertyservice
+COPY propertyservice/package*.json ./ 
+
 RUN npm install
 
-# Copia o restante da aplicação
-COPY . .
+# Copia o código do propertyservice
+COPY propertyservice/. .
 
-# Expõe a porta que o app usa
+# Copia também o kafka-bus (fica no mesmo contexto ./backend)
+COPY kafka-bus ../kafka-bus
+
 EXPOSE 3002
 
-# Comando para iniciar a aplicação
 CMD ["node", "index.js"]

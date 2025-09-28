@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/login',controllers.login);
 router.post('/create',controllers.create);
 router.post('/change-password',controllers.password);
+router.post('/delete-account',controllers.remove);
 router.post('/update-profile-pic',controllers.changeProfilePic);
 
 // router.get('/', controllers.getAllNotes); //router.get('/', getAllNotes);

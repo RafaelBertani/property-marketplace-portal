@@ -6,6 +6,7 @@ import CreatePage from './pages/CreatePage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProfilePage from './pages/ProfilePage';
 import ListingsPage from './pages/ListingsPage';
+import ListPage from './pages/ListPage';
 import './App.css'
 import Header from './Components/Header';
 import Sidebar from './Components/Sidebar';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/listings" element={<ListingsPage />} />
+        <Route path="/list" element={<ListPage />} />
       </Routes>
     </div>
   )

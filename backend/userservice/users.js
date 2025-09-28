@@ -1,5 +1,6 @@
 const pool = require('./database/databaseConfig');
 const bcrypt = require('bcrypt');
+const kafka = require('../kafka-bus/index.js');
 
 const getAllUsers = async() => {
   const res = await pool.query('SELECT * FROM users');
@@ -151,6 +152,27 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
   }
 }
 
+const deleteAccount = async (userId) => {
+  try {
+    const result = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [userId]);
+    if (result.rowCount === 0) return { success: false, message: "Usuário não encontrado." };
+
+    // Producer Kafka
+    const producer = kafka.producer();
+    await producer.connect();
+    await producer.send({
+      topic: "user-events",
+      messages: [{ key: "USER_DELETED", value: JSON.stringify({ userId }) }],
+    });
+    await producer.disconnect();
+
+    return { success: true, message: "Conta excluída com sucesso!" };
+  } catch (err) {
+    console.error("Erro ao excluir conta:", err);
+    return { success: false, message: "Erro ao excluir conta." };
+  }
+};
+
 const updateProfilePic = async (userId, profile_pic) => {
   try {
     const result = await pool.query(
@@ -169,5 +191,6 @@ module.exports = {
   verifyLogin,
   verifyCreateUser,
   updatePassword,
+  deleteAccount,
   updateProfilePic
 };

@@ -19,6 +19,7 @@ CREATE TABLE users (
 npm install bcrypt
 npm install jsonwebtoken
 npm install dotenv
+kafkajs
 cria arquivo .env
 JWT_SECRET_KEY=your-secret-key-here
 
@@ -51,6 +52,7 @@ CREATE TABLE property_images (
     property_id INT NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
     image_data BYTEA NOT NULL,
     image_name VARCHAR(255),
+    is_main BOOLEAN DEFAULT FALSE,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -61,3 +63,5 @@ CREATE TABLE property_likes (
 );
 
 cria um .env com: JWT_SECRET_KEY=ifthispasswordwentonlineifailed
+
+npm install multer
