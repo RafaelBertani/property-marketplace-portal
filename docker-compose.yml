@@ -97,11 +97,3 @@ volumes:
   postgres_data:
     driver: local
 
-# docker-compose up -d
-# docker-compose up --build -d
-
-# docker-compose down
-# docker-compose up -d
-
-# docker exec -it meu_postgres psql -U meu_usuario -d minha_base
-# docker exec -it teste_postgre_docker psql -U postgres -d testejs

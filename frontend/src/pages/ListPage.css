@@ -62,7 +62,6 @@ textarea {
   background-color: #005fa3;
 }
 
-/* Responsivo para telas pequenas */
 @media (max-width: 768px) {
   .form-container {
     grid-template-columns: 1fr;

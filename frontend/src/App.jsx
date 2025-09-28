@@ -10,7 +10,7 @@ import ListPage from './pages/ListPage';
 import './App.css'
 import Header from './Components/Header';
 import Sidebar from './Components/Sidebar';
-import 'bootstrap/dist/css/bootstrap.min.css' //npm install bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);

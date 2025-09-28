@@ -173,7 +173,6 @@ function ProfilePage() {
           {message && <p className="password-message">{message}</p>}
         </div>
 
-        {/* Botão de excluir conta */}
         <div className="delete-account-section">
           <button className="btn-delete-account" onClick={handleDeleteAccount}>
             Excluir Conta

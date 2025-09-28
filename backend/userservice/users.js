@@ -121,7 +121,7 @@ const verifyCreateAdm = async (email, name, password) => {
 
 const updatePassword = async (userId, currentPassword, newPassword) => {
   try {
-    // 1. Busca usuário
+    // Busca usuário
     const queryUser = "SELECT password FROM users WHERE id = $1";
     const result = await pool.query(queryUser, [userId]);
 
@@ -131,17 +131,17 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
 
     const hashedPassword = result.rows[0].password;
 
-    // 2. Confere senha atual
+    // Confere senha atual
     const isMatch = await bcrypt.compare(currentPassword, hashedPassword);
     if (!isMatch) {
       return { success: false, message: "Senha atual incorreta." };
     }
 
-    // 3. Hash da nova senha
+    // Hash da nova senha
     const salt = await bcrypt.genSalt(10);
     const hashedNewPassword = await bcrypt.hash(newPassword, salt);
 
-    // 4. Atualiza
+    // Atualiza
     const updateQuery = "UPDATE users SET password = $1 WHERE id = $2";
     await pool.query(updateQuery, [hashedNewPassword, userId]);
 

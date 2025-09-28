@@ -1,4 +1,3 @@
-# backend/kafka-bus/Dockerfile
 FROM node:18
 
 WORKDIR /app

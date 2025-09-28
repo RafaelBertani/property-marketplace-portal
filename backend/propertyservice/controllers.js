@@ -108,7 +108,7 @@ async function listed(req, res) {
   const { id } = req.params;
 
   try {
-    const listings = await properties.getMyListing(id); // chama a função do repository
+    const listings = await properties.getMyListing(id);
     return res.json(listings);
   } catch (error) {
     console.error("Erro ao buscar listagens:", error);

@@ -80,8 +80,8 @@ export default function ListPage() {
         <div className="form-group">
           <label>Tipo de operação:</label>
           <select
-            name="purpose"   // 👈 corrigido
-            value={formData.purpose}  // 👈 corrigido
+            name="purpose"
+            value={formData.purpose}
             onChange={handleChange}
           >
             <option value="Buy">Venda</option>
