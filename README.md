@@ -56,9 +56,7 @@ Property Marketplace Portal is a web platform for real estate agencies to manage
    cd ./frontend
 
 2. **Install the dependencies**:
-    Once inside the frontend directory, run the following command to install all required dependencies:
     npm install
 
 3. **Start the frontend**:
-    Run the following command:
     npm run dev
